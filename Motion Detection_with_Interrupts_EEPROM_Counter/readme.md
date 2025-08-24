@@ -1,6 +1,6 @@
 # ESP32 Sensor & Low Power System Simulation
 
-## 📌 Project Overview
+## Project Overview
 This project demonstrates an **ESP32-based system** in Wokwi that:
 - Reads data from a **DHT22 sensor**.
 - Sends readings over **UART (Serial Monitor)** every 5 seconds in JSON format.
@@ -12,7 +12,7 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 
 ---
 
-## 🔧 Hardware Connections (Wokwi Simulation)
+## Hardware Connections (Wokwi Simulation)
 
 | Component   | ESP32 Pin |
 |-------------|-----------|
@@ -23,7 +23,7 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 
 ---
 
-## ⚡ Pin Mappings
+## Pin Mappings
 
 - **DHT22** → GPIO 15  
 - **PIR Sensor** → GPIO 27 (interrupt source)  
@@ -32,7 +32,7 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 
 ---
 
-## 🌀 System Modes
+## System Modes
 
 ### 1. **Active Mode**
 - Default startup mode.  
@@ -58,7 +58,7 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 
 ---
 
-## 📜 Low-Power Logic
+##  Low-Power Logic
 - **Interrupt-driven** mode switching using button & PIR.  
 - **Deep sleep** after inactivity → saves power.  
 - **EEPROM counter** ensures wakeup history is persistent across resets.  
@@ -77,7 +77,7 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 
 ---
 
-## 📸 Screenshots
+##  Screenshots
 
 - **Active Mode (JSON UART Output)**  
   ![Active Mode](img1.png)
@@ -91,7 +91,7 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 ---
 
 ## 🔗 Wokwi Project Link
-👉 [Click Here to Open Simulation](https://wokwi.com/projects/440147266917427201)
+ [Click Here to Open Simulation](https://wokwi.com/projects/440147266917427201)
 
 
 ---
