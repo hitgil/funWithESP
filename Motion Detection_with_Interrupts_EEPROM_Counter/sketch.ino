@@ -16,31 +16,37 @@ static int var_one;
 static int var_two;
 DHTesp dht;
 
-unsigned int lastSendTime = 0;
-unsigned int lastMotionTime = 0;
-unsigned int lastHeartbeatTime = 0;
+unsigned long lastSendTime = 0;
+unsigned long lastMotionTime = 0;
+unsigned long lastHeartbeatTime = 0;
 unsigned long lastBtnPress = 0;
 unsigned int count = 0;
 
-bool standByMode = false;
-bool lowPowerMode = false;
 bool pirTriggered = false; 
 
+enum SystemState {
+  ACTIVE,
+  STANDBY,
+  LOW_POWER
+};
 
-void IRAM_ATTR handleInterrupt(void){
+SystemState currentState = ACTIVE;
+
+void IRAM_ATTR handleInterrupt(void) {
   unsigned long currentTime = millis();
-  if (currentTime - lastBtnPress > 10) {  // 10ms debounce
+  if (currentTime - lastBtnPress > 200) {
     if (digitalRead(PIN_BTN) == LOW) {
-      standByMode = true;
-      digitalWrite(LED_PIN, !digitalRead(LED_PIN));
-    } else {
-      standByMode = false;
+      if (currentState == ACTIVE) {
+        currentState = STANDBY;
+      } else if (currentState == STANDBY) {
+        currentState = ACTIVE;
+      }
     }
     lastBtnPress = currentTime;
   }
 }
 
-void IRAM_ATTR pirInterrupt(void){
+void IRAM_ATTR pirInterrupt(void) {
   pirTriggered = true;
   lastMotionTime = millis();
 }
@@ -56,48 +62,20 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   pinMode(LED_PIN_SPI, OUTPUT);
 
-  attachInterrupt(digitalPinToInterrupt(PIN_BTN), handleInterrupt, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(PIN_BTN), handleInterrupt, FALLING);
   attachInterrupt(digitalPinToInterrupt(PIR_PIN), pirInterrupt, RISING);
   lastMotionTime = millis(); 
 
-  // EEPROM init
   if (!EEPROM.begin(EEPROM_SIZE)) {
     Serial.println("Failed to initialise EEPROM!");
     while (1);
   }
 
-  // Load previous counter
   EEPROM.get(ADD_COUNT, count);
   Serial.printf("System Boot → Previous Low Power Entries: %u\n", count);
 }
 
-
-void loop() {
-  if (standByMode) {
-    Serial.println("STAND BY MODE");
-    delay(500);
-    return;
-  }
-
-  if (pirTriggered) {
-    pirTriggered = false;               
-    lowPowerMode = false;               
-    Serial.println("Motion detected → Wake up!");
-  }
-
-  if (!lowPowerMode && (millis() - lastMotionTime >= 30000)) {
-    count++;
-    EEPROM.put(ADD_COUNT, count);
-    EEPROM.commit();
-    lowPowerMode = true;
-    Serial.printf("Entering LOW POWER MODE... Count: %u\n", count);
-  }
-
-  if (lowPowerMode) {
-    delay(500); 
-    return;
-  }
-
+void handleActiveMode() {
   if (millis() - lastHeartbeatTime >= 2000) {
     lastHeartbeatTime = millis();
     Serial.println("{\"spi_heartbeat\": \"OK\"}");
@@ -121,14 +99,43 @@ void loop() {
     jsonData += "\"pot\":" + String(var_two) + ",";
     jsonData += "\"temperature\":" + String(data.temperature, 2) + ",";
     jsonData += "\"humidity\":" + String(data.humidity, 2) + ",";
-    jsonData += "\"lowPowerCount\":" + String(count);
     jsonData += "}";
     Serial.println(jsonData);
   }
 
   if (digitalRead(PIN_BTN_TWO) == LOW) {  
     digitalWrite(LED_PIN_SPI, !digitalRead(LED_PIN_SPI));
-    delay(300); 
     Serial.println("Mock SPI Data Received -> Toggled SPI LED");
+    delay(300); 
+  }
+
+  if (millis() - lastMotionTime >= 30000) {
+    count++;
+    EEPROM.put(ADD_COUNT, count);
+    EEPROM.commit();
+    currentState = LOW_POWER;
+    Serial.printf("Entering LOW POWER MODE... Count: %u\n", count);
+  }
+}
+
+void loop() {
+  switch (currentState) {
+    case ACTIVE:
+      handleActiveMode();
+      break;
+
+    case STANDBY:
+      Serial.println("STAND BY MODE");
+      delay(500);
+      break;
+
+    case LOW_POWER:
+      delay(500); 
+      if (pirTriggered) {
+        pirTriggered = false;
+        currentState = ACTIVE;
+        Serial.println("Motion detected → Wake up!");
+      }
+      break;
   }
 }

@@ -8,6 +8,8 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 - Supports a **Sleep mode** triggered by inactivity.
 - Includes an **EEPROM counter** that tracks the number of wakeups.
 
+![alt](ckt.png)
+
 ---
 
 ## 🔧 Hardware Connections (Wokwi Simulation)
@@ -78,31 +80,20 @@ This project demonstrates an **ESP32-based system** in Wokwi that:
 ## 📸 Screenshots
 
 - **Active Mode (JSON UART Output)**  
-  ![Active Mode](./screenshots/active_mode.png)
+  ![Active Mode](img1.png)
 
 - **Standby Mode (LED Off, No UART Output)**  
-  ![Standby Mode](./screenshots/standby_mode.png)
+  ![Standby Mode](img2.png)
 
 - **Wakeup Event (EEPROM Counter)**  
-  ![Wakeup](./screenshots/wakeup.png)
+  ![Wakeup](img3.png)
 
 ---
 
 ## 🔗 Wokwi Project Link
-👉 [Click Here to Open Simulation](https://wokwi.com/projects/your-project-id)
+👉 [Click Here to Open Simulation](https://wokwi.com/projects/440147266917427201)
+
 
 ---
 
-## 📂 Deliverables
-
-- `main.ino` → Source Code  
-- Wokwi Project Link  
-- Screenshots of simulation  
-- README.md (this file)  
-
----
-
-## 🚀 Bonus
-- **EEPROM counter** ensures wakeup history persists even after ESP32 resets.  
-- Demonstrates **realistic low-power IoT behavior** with JSON data exchange.  
 
