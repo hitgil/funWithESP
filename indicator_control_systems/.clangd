@@ -1,0 +1,3 @@
+CompileFlags:
+  CompilationDatabase: /Users/hitgirl/workspace/indicator_control_systems/build
+  Remove: [-m*, -f*]

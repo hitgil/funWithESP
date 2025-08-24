@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "author": "sneha balakrishnan",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -19.2, "left": -158.36, "attrs": {} },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir1",
+      "top": -168.8,
+      "left": -276.18,
+      "attrs": {}
+    },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -68.5, "left": -355.4, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 35,
+      "left": 105.6,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": 163.5,
+      "left": -255,
+      "attrs": { "temperature": "7.5", "humidity": "82" }
+    },
+    { "type": "wokwi-led", "id": "led1", "top": 15.6, "left": 176.6, "attrs": { "color": "red" } },
+    { "type": "wokwi-led", "id": "led2", "top": -147.6, "left": -73, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": -176.2,
+      "left": 115.2,
+      "attrs": { "color": "green", "xray": "1" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "pir1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "pir1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "pot1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "h56.8", "v-76.8" ] ],
+    [ "dht1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "dht1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "btn1:1.l", "esp:GND.2", "green", [ "v-76.8", "h-19.2" ] ],
+    [ "pot1:SIG", "esp:35", "green", [ "v0" ] ],
+    [ "esp:25", "pir1:OUT", "green", [ "h-124.65", "v-124.8" ] ],
+    [ "dht1:SDA", "esp:26", "green", [ "v0" ] ],
+    [ "led1:A", "esp:2", "green", [ "v0" ] ],
+    [ "led1:C", "esp:GND.2", "green", [ "v0" ] ],
+    [ "esp:13", "btn1:2.r", "green", [ "h19.35", "v-19.2", "h307" ] ],
+    [ "led2:A", "esp:5", "green", [ "v0" ] ],
+    [ "led2:C", "esp:GND.2", "green", [ "v0" ] ],
+    [ "btn2:1.l", "esp:GND.2", "green", [ "v153.6", "h-172.8" ] ],
+    [ "esp:32", "btn2:2.r", "green", [ "v-144", "h335.95" ] ]
+  ],
+  "dependencies": {}
+}
